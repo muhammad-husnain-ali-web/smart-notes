@@ -1,17 +1,15 @@
 const API = import.meta.env.VITE_API;
 
-export const Test = async () => {
- const body = {
-  name: "test",
-  description: "test",
- };
+
+// Register API call
+export const registerUser = async (userData) => {
     try {
-        const response = await fetch(`${API}/test`, {
+        const response = await fetch(`${API}/auth/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(body),
+            body: JSON.stringify(userData),
         });
         const data = await response.json();
         return data;
