@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../lib/services";
 
 const Register = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showPwd, setShowPwd] = useState(false);
   const [isDesibledBtI, setisDesibledBtI] = useState(false);
   const [form, setform] = useState({

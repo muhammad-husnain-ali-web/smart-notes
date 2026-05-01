@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/connectDB.js';
 import auth from './routes/auth.js';
+import cookieParser from 'cookie-parser';
 
 
 dotenv.config({path: '.env.local'});
@@ -14,6 +15,7 @@ app.use(cors({
   origin: process.env.PUBLIC_URL,
   credentials: true
 }));
+app.use(cookieParser());
 app.use(express.json());
 // Routes
 // Route for authentication
