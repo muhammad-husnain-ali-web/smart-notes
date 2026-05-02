@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import Users from '../models/Users.js';
 import jwt from 'jsonwebtoken';
+import {verifyToken} from '../lib/verifyToken.js';
 
 
 // Function for user registration
@@ -77,12 +78,15 @@ export const logoutUser = (req, res) => {
 // Function to get user info
 export const me = async (req, res) => {
     try{
-        const token = req.cookies.token;
+        const token = req.cookies.token; // Get token from cookies
         if (!token) {
-            return res.status(401).json({ success: false, auth: false, user: null });
+            return res.status(401).json({ success: false, message: 'Unauthorized', auth: false, user: null });
         }
 
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const payload = verifyToken(token);
+        if (payload === null) {
+            return res.status(401).json({ success: false, message: 'Unauthorized key', auth: false, user: null });
+        }
 
         res.status(200).json({ success: true, auth: true, user: { _id: payload._id, name: payload.name } });
 

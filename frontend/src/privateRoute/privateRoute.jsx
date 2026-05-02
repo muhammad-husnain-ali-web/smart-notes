@@ -2,12 +2,13 @@ import React from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const PrivateRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
     console.log("PrivateRoute user:", user);
     if(user === null){
-        return <div className="w-screen h-screen flex justify-center items-center">Loading...</div>;
+        return <Loader />;
     }
     if(!user.auth){
         return <Navigate to="/auth/login" replace />;

@@ -1,5 +1,6 @@
 import express from "express";
 import { registerUser, loginUser, logoutUser, me  } from "../controllers/authController.js";
+import { verifyUser } from "../middlewares/verifyUser.middleware.js";
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // Route for user logout
-router.post("/logout", logoutUser);
+router.post("/logout", verifyUser, logoutUser);
 
 // Route for getting user info
 router.get("/me", me);
