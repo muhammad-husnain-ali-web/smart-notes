@@ -63,3 +63,20 @@ export async function getUserInfo() {
         console.error("Error:", error);
     }
 }
+
+export const createNote = async (noteData) => {
+    try {
+        const response = await fetch(`${API}/notes`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(noteData),
+        });
+        const res = await response.json();
+        return res;
+    } catch (error) { 
+        console.error("Error:", error);
+    }
+};
