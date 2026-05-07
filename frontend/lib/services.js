@@ -82,7 +82,6 @@ export const createNote = async (noteData) => {
     }
 };
 
-
 // Get notes for user API call
 export async function getNotes() {
     try {
@@ -95,3 +94,22 @@ export async function getNotes() {
         console.error("Error:", error);
     }
 }
+
+// Update note API call
+export const updateNote = async (noteId, noteData) => {
+    try {
+        const response = await fetch(`${API}/notes/${noteId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json", 
+            },
+            credentials: "include",
+            body: JSON.stringify(noteData),
+        });
+        const res = await response.json();
+        return res;
+    }   
+    catch (error) {
+        console.error("Error:", error);
+    }
+};

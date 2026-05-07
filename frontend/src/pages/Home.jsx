@@ -1,8 +1,10 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { createNote, getNotes } from '../../lib/services'
+import { createNote, getNotes, updateNote } from '../../lib/services'
 
 const Home = () => {
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [noteId, setNoteId] = useState(null)
   const [isDisabledBtn, setIsDisabledBtn] = useState(false)
   const [notes, setNotes] = useState([])
   const [note, setNote] = useState({
@@ -20,7 +22,12 @@ const Home = () => {
   useEffect(() => {
    getData()
   }, [])
-  
+
+  const setNotesList = (note) => {
+    setNote(note);
+    setNoteId(note._id);
+    setIsUpdating(true);
+  }
 
     const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,10 +45,20 @@ const Home = () => {
     }
 
     try {
-      const res = await createNote(note);
-      if (res.success) {
-        alert(res.message);
-        getData() // Refresh the notes list after creating a new note
+      if (isUpdating) {
+        const res = await updateNote(noteId, note);
+        if (res.success) {
+          alert("Note updated successfully");
+          getData();
+          setIsUpdating(false);
+          setNoteId(null);
+        }
+      } else {
+        const res = await createNote(note);
+        if (res.success) {
+          alert("Note created successfully");
+          getData();
+        }
       }
       // Clear the form after successful submission
       setNote({
@@ -63,7 +80,7 @@ const Home = () => {
       <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center gap-4'>
         <input type="text" value={note.title} placeholder="Note Title" onChange={(e) => { handleInputChange(e); }} name='title' className='p-2 text-green-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 w-full' />
         <textarea value={note.content} placeholder="Note Content" onChange={(e) => { handleInputChange(e); }} name='content' className='p-2 text-green-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 w-full' rows="5"></textarea>
-        <button type="submit" disabled={isDisabledBtn} className={`${isDisabledBtn ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'} text-white py-2 px-4 rounded-md transition-colors duration-300 w-[50%] cursor-pointer`}>Add Note</button>
+        <button type="submit" disabled={isDisabledBtn} className={`${isDisabledBtn ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'} text-white py-2 px-4 rounded-md transition-colors duration-300 w-[50%] cursor-pointer`}>{isUpdating ? 'Update Note' : 'Add Note'}</button>
       </form>
     </div>
     <div className="notes py-8">
@@ -77,7 +94,12 @@ const Home = () => {
       {notes.map((note) => {
         return (
           <div key={note._id} className="note-item p-4 shrink-0 w-72 bg-green-100 rounded-md shadow-md mb-4">
-            <h4 className='text-xl font-bold text-green-800'>{note.title}</h4>
+            <div className='flex items-center justify-between gap-2 mb-2'>
+              <h4 className='text-xl font-bold text-green-800'>{note.title}</h4>
+              <span>
+                <button onClick={() => { setNotesList(note) }} className='cursor-pointer'><img src="/icons/edit.svg" alt="edit" /></button>
+              </span>
+            </div>
             <p className='text-gray-600 h-32 overflow-y-auto'>{note.content}</p>
           </div>
         )

@@ -31,3 +31,24 @@ export const getNotes = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+// Function to update a note
+export const updateNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, content } = req.body;
+        const userId = req.user._id;
+        const note = await Notes.findOne({ _id: id, userId: userId });
+        if (!note) {
+            return res.status(404).json({ success: false, message: 'Note not found' });
+        }
+        note.title = title || note.title;
+        note.content = content || note.content;
+        await note.save();
+        res.status(200).json({ success: true, message: 'Note updated successfully' });
+    }   
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
