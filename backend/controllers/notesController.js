@@ -52,3 +52,20 @@ export const updateNote = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+// Function to delete a note
+export const deleteNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user._id;
+        const result = await Notes.deleteOne({ _id: id, userId: userId });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ success: false, message: 'Note not found' });
+        }
+        res.status(200).json({ success: true, message: 'Note deleted successfully' });
+    }   
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};

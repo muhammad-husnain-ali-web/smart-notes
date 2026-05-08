@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { createNote, getNotes, updateNote } from '../../lib/services'
+import { createNote, getNotes, updateNote, deleteNote } from '../../lib/services'
 
 const Home = () => {
   const [isUpdating, setIsUpdating] = useState(false)
@@ -70,6 +70,21 @@ const Home = () => {
     }
   };
 
+  const noteDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this note?")) {
+      return;
+    }
+    try {
+      const res = await deleteNote(id);
+      if (res.success) {
+        alert("Note deleted successfully");
+        getData();
+      }
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
+  };
+
   return (
     <div className='w-[98%] lg:w-[70vw] mx-auto px-6 py-4 bg-green-200 rounded-lg shadow-md'>
       <h1 className='text-3xl text-center font-bold text-green-800 py-4'>Smart Notes</h1>
@@ -96,7 +111,8 @@ const Home = () => {
           <div key={note._id} className="note-item p-4 shrink-0 w-72 bg-green-100 rounded-md shadow-md mb-4">
             <div className='flex items-center justify-between gap-2 mb-2'>
               <h4 className='text-xl font-bold text-green-800'>{note.title}</h4>
-              <span>
+              <span className="flex gap-2">
+                <button onClick={() => { noteDelete(note._id) }} className='cursor-pointer'><img src="/icons/delete.svg" alt="delete" /></button>
                 <button onClick={() => { setNotesList(note) }} className='cursor-pointer'><img src="/icons/edit.svg" alt="edit" /></button>
               </span>
             </div>

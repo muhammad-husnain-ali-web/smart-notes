@@ -1,5 +1,5 @@
 import express from "express";
-import { createNote, getNotes, updateNote } from "../controllers/notesController.js";
+import { createNote, getNotes, updateNote, deleteNote } from "../controllers/notesController.js";
 import { verifyUser } from "../middlewares/verifyUser.middleware.js";
 
 const router = express.Router();
@@ -12,5 +12,8 @@ router.get("/", verifyUser, getNotes);
 
 // Route for updating a note
 router.put("/:id", verifyUser, updateNote);
+
+// Route for deleting a note
+router.delete("/:id", verifyUser, deleteNote);
 
 export default router;

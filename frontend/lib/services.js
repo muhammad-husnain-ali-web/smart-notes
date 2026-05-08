@@ -113,3 +113,17 @@ export const updateNote = async (noteId, noteData) => {
         console.error("Error:", error);
     }
 };
+
+// Delete note API call
+export const deleteNote = async (noteId) => {
+    try {
+        const response = await fetch(`${API}/notes/${noteId}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+        const res = await response.json();
+        return res;
+    } catch (error) {
+        console.error("Error:", error);
+    }
+};
